@@ -12,16 +12,42 @@
         <title>Document</title>
     </head>
     <style>
+        .form-input {
+            width: 300px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            margin-left: 50%;
+            margin-right: auto;
+            margin-top: 20px;
+            padding-top: 5px;
+        }
 
+        button {
+            width: 100px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            margin-left: 50%;
+            margin-right: auto;
+            margin-top: 20px;
+            padding-top: 5px;
+        }
     </style>
 
     <body>
         <div id="app">
+            {{ tile }}
+
             <!-- các attribute mà ta truyền vào các component hoặc dom element được gọi là derectives -->
             <!-- Trong code phía dưới ta dùng derective để thực hiện một vòng lặp -->
             <input-field v-for="(item, index) in inputs" :key="index" :label="item.label" v-model="item.value"
-                :type="item.type" />
-            <!-- Để truyền cho component con các data của cha ta dùng v-bind hoặc : -->
+                :type="item.type"></input-field>
+            <!-- v-model ở trên cũng là một dạng prop và có thể truyền xuống cho components con -->
+            <button @click="submit">submit</button>
+
         </div>
         <script src="https://unpkg.com/vue@3"></script>
         <script>
@@ -29,11 +55,11 @@
                 data() {
                     return {
                         tile: "form",
-                        // ta cũng có thể khai báo các kiểu dữ liệu phức tạp
+                        // ta cũng có thể khai báo một mảng các object 
                         inputs: [
                             {
                                 label: 'Name',
-                                value: '',
+                                value: 'haha',
                                 type: 'text',
 
                             },
@@ -55,22 +81,44 @@
                 },
                 //ta khai báo các component trong form
                 components: ['input-field'],
+                methods: {
+                    submit() {
+                        this.inputs.forEach(item => {
+                            alert(item.label + ': ' + item.value)
+                        })
+                    }
+                },
             })
             // lệnh dưới dùng để định nghĩa các component con cho form
             form.component('input-field', {
                 template: `
-                    <div>
+                    <div class="form-input">
                         {{ label }}
-                        <input type="type" v-bind:value="value">
+                        <input type="type" v-model="inputValue">
                     </div>
                 `,
                 // props là mảng các thuộc tính của component cha truyền cho component con
-                props: ['type', 'value', 'label'],
-            })
+                // Chú ý v-model sẽ pass xuống child một prob có tên modelValue
+                props: ['type', 'label', 'modelValue'],
+
+                // compute là cách đê ta xử lý các thuộc tính của component con
+                computed: {
+                    inputValue: {
+                        // get là hàm dùng để lấy giá trị props gán vào biến inputValue
+                        get() {
+                            return this.modelValue;
+                        },
+                        // hàm set là hàm dùng để gán giá trị từ biến inputValue vào props
+                        // CHÚ Ý: do tính imutability của prop khi ta muốn thay đổi giá trị ở component cha ta phải gọi emits để thực hiện một hành động nào đó trên component cha
+                        set(childValue) {
+                            console.log(childValue);
+                            this.$emit('update:modelValue', childValue);
+                        }
+                    }
+                },
+            });
 
             form.mount('#app');
-
-            ;
         </script>
 
     </body>

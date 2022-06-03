@@ -12,18 +12,110 @@
         <title>Document</title>
     </head>
     <style>
+ single-page-vue-app
+        .form-input {
+            width: 300px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            margin-left: 50%;
+            margin-right: auto;
+            margin-top: 20px;
+            padding-top: 5px;
+        }
 
-    </style>
+        button {
+            width: 100px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            margin-left: 50%;
+            margin-right: auto;
+            margin-top: 20px;
+            padding-top: 5px;
+        }
+=======
+ single-page-vue-app
+            {{ tile }}
 
-    <body>
-        <div id="app">
+            <!-- các attribute mà ta truyền vào các component hoặc dom element được gọi là derectives -->
+            <!-- Trong code phía dưới ta dùng derective để thực hiện một vòng lặp -->
+            <input-field v-for="(item, index) in inputs" :key="index" :label="item.label" v-model="item.value"
+                :type="item.type"></input-field>
+            <!-- v-model ở trên cũng là một dạng prop và có thể truyền xuống cho components con -->
+            <button @click="submit">submit</button>
+
+=======
             <input-field />
-        </div>
-        <script src="https://unpkg.com/vue@3"></script>
-        <script>
-            const form = Vue.createApp({
-                data() {
-                    return {
+single-page-vue-app
+                        tile: "form",
+                        // ta cũng có thể khai báo một mảng các object 
+                        inputs: [
+                            {
+                                label: 'Name',
+                                value: 'haha',
+                                type: 'text',
+
+                            },
+                            {
+                                label: 'Email',
+                                value: '',
+                                type: 'email',
+
+                            },
+                            {
+                                label: 'Password',
+                                value: '',
+                                type: 'password'
+                            }
+                        ],
+
+
+                    }
+                },
+                //ta khai báo các component trong form
+                components: ['input-field'],
+                methods: {
+                    submit() {
+                        this.inputs.forEach(item => {
+                            alert(item.label + ': ' + item.value)
+                        })
+                    }
+                },
+            })
+            // lệnh dưới dùng để định nghĩa các component con cho form
+            form.component('input-field', {
+                template: `
+                    <div class="form-input">
+                        {{ label }}
+                        <input type="type" v-model="inputValue">
+                    </div>
+                `,
+                // props là mảng các thuộc tính của component cha truyền cho component con
+                // Chú ý v-model sẽ pass xuống child một prob có tên modelValue
+                props: ['type', 'label', 'modelValue'],
+
+                // compute là cách đê ta xử lý các thuộc tính của component con
+                computed: {
+                    inputValue: {
+                        // get là hàm dùng để lấy giá trị props gán vào biến inputValue
+                        get() {
+                            return this.modelValue;
+                        },
+                        // hàm set là hàm dùng để gán giá trị từ biến inputValue vào props
+                        // CHÚ Ý: do tính imutability của prop khi ta muốn thay đổi giá trị ở component cha ta phải gọi emits để thực hiện một hành động nào đó trên component cha
+                        set(childValue) {
+                            console.log(childValue);
+                            this.$emit('update:modelValue', childValue);
+                        }
+                    }
+                },
+            });
+
+            form.mount('#app');
+=======
                         name: '',
                         email: '',
                         message: 'Hello moron !!!!',
@@ -45,8 +137,3 @@
             form.mount('#app');
 
             ;
-        </script>
-
-    </body>
-
-</html>

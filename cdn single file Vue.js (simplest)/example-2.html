@@ -1,0 +1,78 @@
+<!-- Trong example 1 ta đã tiếp xúc và biết được những cơ chế hoạt động ban đầu của Vue 
+     Trong ví dụ 2 ta sẽ demo việc chia nhỏ một ứng dụng vue lớn thành các components nhỏ chuyên biệt cũng như việc truyền prob giữa các component
+     Người ta sử dụng vue cũng vì tính chất có thể chia nhỏ thành các components của thư viện này -->
+
+
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <style>
+
+    </style>
+
+    <body>
+        <div id="app">
+            <!-- các attribute mà ta truyền vào các component hoặc dom element được gọi là derectives -->
+            <!-- Trong code phía dưới ta dùng derective để thực hiện một vòng lặp -->
+            <input-field v-for="(item, index) in inputs" :key="index" :label="item.label" v-model="item.value"
+                :type="item.type" />
+            <!-- Để truyền cho component con các data của cha ta dùng v-bind hoặc : -->
+        </div>
+        <script src="https://unpkg.com/vue@3"></script>
+        <script>
+            const form = Vue.createApp({
+                data() {
+                    return {
+                        tile: "form",
+                        // ta cũng có thể khai báo các kiểu dữ liệu phức tạp
+                        inputs: [
+                            {
+                                label: 'Name',
+                                value: '',
+                                type: 'text',
+
+                            },
+                            {
+                                label: 'Email',
+                                value: '',
+                                type: 'email',
+
+                            },
+                            {
+                                label: 'Password',
+                                value: '',
+                                type: 'password'
+                            }
+                        ],
+
+
+                    }
+                },
+                //ta khai báo các component trong form
+                components: ['input-field'],
+            })
+            // lệnh dưới dùng để định nghĩa các component con cho form
+            form.component('input-field', {
+                template: `
+                    <div>
+                        {{ label }}
+                        <input type="type" v-bind:value="value">
+                    </div>
+                `,
+                // props là mảng các thuộc tính của component cha truyền cho component con
+                props: ['type', 'value', 'label'],
+            })
+
+            form.mount('#app');
+
+            ;
+        </script>
+
+    </body>
+
+</html>

@@ -12,6 +12,7 @@
         <title>Document</title>
     </head>
     <style>
+ single-page-vue-app
         .form-input {
             width: 300px;
             height: 30px;
@@ -35,10 +36,8 @@
             margin-top: 20px;
             padding-top: 5px;
         }
-    </style>
-
-    <body>
-        <div id="app">
+=======
+ single-page-vue-app
             {{ tile }}
 
             <!-- các attribute mà ta truyền vào các component hoặc dom element được gọi là derectives -->
@@ -48,12 +47,9 @@
             <!-- v-model ở trên cũng là một dạng prop và có thể truyền xuống cho components con -->
             <button @click="submit">submit</button>
 
-        </div>
-        <script src="https://unpkg.com/vue@3"></script>
-        <script>
-            const form = Vue.createApp({
-                data() {
-                    return {
+=======
+            <input-field />
+single-page-vue-app
                         tile: "form",
                         // ta cũng có thể khai báo một mảng các object 
                         inputs: [
@@ -119,8 +115,25 @@
             });
 
             form.mount('#app');
-        </script>
+=======
+                        name: '',
+                        email: '',
+                        message: 'Hello moron !!!!',
+                        password: '',
+                    }
+                },
+            })
+            // lệnh dưới dùng để khai báo các component con cho form
+            form.component('input-field', {
+                props: ['type', 'value'],
+                template: `
+                    <div>
+                        <label>{{ type }}</label>
+                        <input v-bind:type="type" v-bind:value="value" v-on:input="$emit('input', $event.target.value)">
+                    </div>
+                `
+            })
 
-    </body>
+            form.mount('#app');
 
-</html>
+            ;

@@ -1,0 +1,52 @@
+<!-- Trong example 1 ta đã tiếp xúc và biết được những cơ chế hoạt động ban đầu của Vue 
+     Trong ví dụ 2 ta sẽ demo việc chia nhỏ một ứng dụng vue lớn thành các components nhỏ chuyên biệt cũng như việc truyền prob giữa các component
+     Người ta sử dụng vue cũng vì tính chất có thể chia nhỏ thành các components của thư viện này -->
+
+
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <style>
+
+    </style>
+
+    <body>
+        <div id="app">
+            <input-field />
+        </div>
+        <script src="https://unpkg.com/vue@3"></script>
+        <script>
+            const form = Vue.createApp({
+                data() {
+                    return {
+                        name: '',
+                        email: '',
+                        message: 'Hello moron !!!!',
+                        password: '',
+                    }
+                },
+            })
+            // lệnh dưới dùng để khai báo các component con cho form
+            form.component('input-field', {
+                props: ['type', 'value'],
+                template: `
+                    <div>
+                        <label>{{ type }}</label>
+                        <input v-bind:type="type" v-bind:value="value" v-on:input="$emit('input', $event.target.value)">
+                    </div>
+                `
+            })
+
+            form.mount('#app');
+
+            ;
+        </script>
+
+    </body>
+
+</html>

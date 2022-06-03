@@ -1,5 +1,12 @@
 # demo-vuejs
-[logo]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 2"
+
+---
+
+## Syntax trong project này là syntax của Vue.js 3
+
+---
+
+[logo]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png 'Logo Title Text 2'
 
 ### Phần syntax cơ bản
 
